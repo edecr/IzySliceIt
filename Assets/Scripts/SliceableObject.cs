@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,16 +21,10 @@ public class SliceableObject : MonoBehaviour
         _rbChild1 = transform.GetChild(0).GetComponent<Rigidbody>();
         _rbChild2 = transform.GetChild(1).GetComponent<Rigidbody>();
 
-        // Setup meshes materials
-      //  _mesh.material = _material;
-     //   transform.GetChild(0).GetComponent<MeshRenderer>().material = _material;
-     //   transform.GetChild(1).GetComponent<MeshRenderer>().material = _material;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+     // Setup meshes materials
+    //  _mesh.material = _material;
+     // transform.GetChild(0).GetComponent<MeshRenderer>().material = _material;
+     // transform.GetChild(1).GetComponent<MeshRenderer>().material = _material;
     }
 
     private void OnTriggerEnter (Collider other)
@@ -46,6 +41,8 @@ public class SliceableObject : MonoBehaviour
             _rbChild1.AddForce(-_rbChild1.transform.forward * 7.0f, ForceMode.Impulse);
             _rbChild2.isKinematic = false;
             _rbChild2.AddForce(_rbChild1.transform.forward * 7.0f, ForceMode.Impulse);
-        } 
+
+            GameManager.Instance.SetScore();
+        }
     }
 }

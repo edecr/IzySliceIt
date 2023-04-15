@@ -24,6 +24,9 @@ public class SlicerController : MonoBehaviour
     public event Action OnDie;
     public event Action OnCheckPoint;
 
+    private Vector3 _lastPosition;
+    private Quaternion _lastRotation;
+
     private void Start ()
     {
         _rbSlicer = GetComponent<Rigidbody>();
@@ -70,7 +73,7 @@ public class SlicerController : MonoBehaviour
 	{
         _rbSlicer.isKinematic = false;
      //   transform.position = new Vector3(transform.position.x, transform.position.y + 1.2f, transform.position.z);
-        Invoke("SetGroundedWithDelay", 0.5f);
+        Invoke("SetGroundedWithDelay", 0.3f);
     }
 
     private void ApplyImpulse ()
@@ -117,11 +120,20 @@ public class SlicerController : MonoBehaviour
 	{
         _rbSlicer.isKinematic = true;
         _isGrounded = true;
+        _lastPosition = transform.position;
+        _lastRotation = transform.rotation;
+        Debug.Log("change position");
+    }
+
+    public void MoveToLastPosition ()
+	{
+        transform.position = _lastPosition;
+        transform.rotation = _lastRotation;
+        _isAlive = true;
     }
 
     private void SetGroundedWithDelay ()
 	{
         _isGrounded = false;
     }
-
 }
