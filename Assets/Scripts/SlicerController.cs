@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class SlicerController : MonoBehaviour
 {
@@ -8,31 +9,68 @@ public class SlicerController : MonoBehaviour
     public float MoveForce = 115f; // A força que será aplicada para mover o objeto para a direita
     public float RotationForce = 180f;
 
+    private bool _isGrounded = false;
+    private bool _isAlive = true;
+    private bool _isCheckPoint = false;
+
     private Rigidbody _rbSlicer;
+
+    public float gravityMultiplier = 7f; // Multiplicador de gravidade
+    
+    private LayerMask _groundLayer;
+    private LayerMask _deadZoneLayer;
+    private LayerMask _checkPointLayer;
+
+    public event Action OnDie;
+    public event Action OnCheckPoint;
 
     private void Start ()
     {
         _rbSlicer = GetComponent<Rigidbody>();
+        _groundLayer = LayerMask.NameToLayer("Ground");
+        _deadZoneLayer = LayerMask.NameToLayer("DeadZone");
+        _checkPointLayer = LayerMask.NameToLayer("CheckPoint");
     }
 
     private void Update ()
     {
-        ///TODO substituir por touch, usar novo input system se der tempo.
+        Debug.Log(">>> " + _isGrounded);
         if (Input.GetMouseButtonDown(0))
         {
-            ReleaseSlicer(); //Unstuck the Slicer from ground
-
-            // Apply forces to move and rotate the Slicer
+            ReleaseSlicer();
             ApplyImpulse();
             ApplyMoveForce();
             ApplyRotationForce();
+            
+        //    Debug.Log("MOUSE DOWN");
         }
+
+            ///TODO substituir por touch, usar novo input system se der tempo.
+            /*   if (Input.GetMouseButtonDown(0))
+               {
+                   ReleaseSlicer(); //Unstuck the Slicer from ground
+
+                   // Apply forces to move and rotate the Slicer
+                   ApplyImpulse();
+                   ApplyMoveForce();
+                   ApplyRotationForce();
+               }*/
     }
 
-    private void ReleaseSlicer ()
+	private void FixedUpdate ()
+	{
+        // Added downward gravitational force
+        if (!_isGrounded)
+        {
+            _rbSlicer.AddForce(Vector3.down * Physics.gravity.magnitude * gravityMultiplier);
+        } 
+    }
+
+	private void ReleaseSlicer ()
 	{
         _rbSlicer.isKinematic = false;
-        transform.position = new Vector3(transform.position.x, transform.position.y + 1.2f, transform.position.z);
+     //   transform.position = new Vector3(transform.position.x, transform.position.y + 1.2f, transform.position.z);
+        Invoke("SetGroundedWithDelay", 0.5f);
     }
 
     private void ApplyImpulse ()
@@ -55,37 +93,35 @@ public class SlicerController : MonoBehaviour
 
     private void OnTriggerEnter (Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        if (other.gameObject.layer == _groundLayer && !_isGrounded)
         {
             StuckSlicerOnGround();
+        } 
+        else if (other.gameObject.layer == _deadZoneLayer && _isAlive)
+        {
+            _isAlive = false;
+            _rbSlicer.isKinematic = true;
+            OnDie?.Invoke();
+            Debug.Log("died");
+        }
+        else if (other.gameObject.layer == _checkPointLayer && !_isCheckPoint)
+        {
+            _isCheckPoint = true;
+            _rbSlicer.isKinematic = true;
+            OnCheckPoint?.Invoke();
+            Debug.Log("checkpoint->nextlevel");
         }
     }
-    /* ADICIONAR NO SCRIPT DO OBJETO Q SERÁ CORTADO
-     private void OnTriggerEnter (Collider other)
-	{
-        Debug.Log("entrouu");
-        other.GetComponent<MeshRenderer>().enabled = false;
-        other.GetComponent<BoxCollider>().enabled = false;
-        Rigidbody tempRb = other.GetComponentInChildren<Rigidbody>();
-        tempRb.isKinematic = false;
-        tempRb.AddForce(-transform.forward * 10.0f, ForceMode.Impulse);
-     //   tempRb.AddForceAtPosition(-transform.forward * 10.0f, Vector3.right * 2f, ForceMode.Impulse);
 
-    }
-     */
-    private void StuckSlicerOnGround()
+	private void StuckSlicerOnGround()
 	{
         _rbSlicer.isKinematic = true;
-        
-        if (transform.eulerAngles.z < 50)
-            transform.position = new Vector3(transform.position.x, transform.position.y - 0.12f, transform.position.z);
-        else if (transform.eulerAngles.z < 120)
-            transform.position = new Vector3(transform.position.x, transform.position.y - 0.03f, transform.position.z);
-        else if (transform.eulerAngles.z < 230)
-            transform.position = new Vector3(transform.position.x, transform.position.y - 0.12f, transform.position.z);
-        else if(transform.eulerAngles.z < 300)
-            transform.position = new Vector3(transform.position.x, transform.position.y - 0.03f, transform.position.z);
-        else
-            transform.position = new Vector3(transform.position.x, transform.position.y - 0.12f, transform.position.z);
+        _isGrounded = true;
     }
+
+    private void SetGroundedWithDelay ()
+	{
+        _isGrounded = false;
+    }
+
 }

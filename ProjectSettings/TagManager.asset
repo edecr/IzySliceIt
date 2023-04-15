@@ -14,8 +14,8 @@ TagManager:
   - SliceableObject
   - Slicer
   - Ground
-  - 
-  - 
+  - DeadZone
+  - CheckPoint
   - 
   - 
   - 
