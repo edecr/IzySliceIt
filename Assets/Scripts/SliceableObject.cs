@@ -43,9 +43,9 @@ public class SliceableObject : MonoBehaviour
 
             // Enables physics of the sliced objects and apply force impulse
             _rbChild1.isKinematic = false;
-            _rbChild1.AddForce(-_rbChild1.transform.forward * 10.0f, ForceMode.Impulse);
+            _rbChild1.AddForce(-_rbChild1.transform.forward * 7.0f, ForceMode.Impulse);
             _rbChild2.isKinematic = false;
-            _rbChild2.AddForce(_rbChild1.transform.forward * 10.0f, ForceMode.Impulse);
+            _rbChild2.AddForce(_rbChild1.transform.forward * 7.0f, ForceMode.Impulse);
         } 
     }
 }
