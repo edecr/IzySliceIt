@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
 //	[SerializeField]
 	private UI_GameOver _UI_GameOver;
 	private UI_Options _UI_Options;
+	private UI_EndGame _UI_EndGame;
 
 	private int _sceneToLoad;
 
@@ -72,6 +73,8 @@ public class GameManager : MonoBehaviour
 		} else
 		{
 			Debug.Log("FIMMM");
+			_slicerController.enabled = false;
+			_UI_EndGame.OnShow();
 		}
 	}
 
@@ -115,12 +118,19 @@ public class GameManager : MonoBehaviour
 		_UI_HUD = GameObject.Find("UI_HUD").GetComponent<UI_HUD>();
 		_UI_GameOver = GameObject.Find("UI_GameOver").GetComponent<UI_GameOver>();//GameObject.FindObjectOfType<UI_GameOver>();
 		_UI_Options = GameObject.Find("UI_Options").GetComponent<UI_Options>();
+		_UI_EndGame = GameObject.Find("UI_EndGame").GetComponent<UI_EndGame>();
 	}
 
 	public void Continue ()
 	{
 		_slicerController.enabled = true;
 		_UI_Options.OnHide();
+	}
+
+	public void NewGame ()
+	{
+		SceneManager.LoadScene(0);
+
 	}
 
 	public void Exit ()

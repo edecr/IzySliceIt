@@ -27,12 +27,16 @@ public class SlicerController : MonoBehaviour
     private Vector3 _lastPosition;
     private Quaternion _lastRotation;
 
+    private Camera _camera;
+
     private void Start ()
     {
         _rbSlicer = GetComponent<Rigidbody>();
         _groundLayer = LayerMask.NameToLayer("Ground");
         _deadZoneLayer = LayerMask.NameToLayer("DeadZone");
         _checkPointLayer = LayerMask.NameToLayer("CheckPoint");
+
+        _camera = Camera.main;
     }
 
     private void Update ()
@@ -40,7 +44,7 @@ public class SlicerController : MonoBehaviour
         Debug.Log(">>> " + _isGrounded);
         if (Input.GetMouseButtonDown(0) && !GameManager.Instance.GameIsPaused)
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit) && hit.collider.CompareTag("TriggerTouch"))
             {
