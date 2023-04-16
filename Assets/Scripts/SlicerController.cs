@@ -38,12 +38,21 @@ public class SlicerController : MonoBehaviour
     private void Update ()
     {
         Debug.Log(">>> " + _isGrounded);
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !GameManager.Instance.GameIsPaused)
         {
-            ReleaseSlicer();
-            ApplyImpulse();
-            ApplyMoveForce();
-            ApplyRotationForce();
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit) && hit.collider.CompareTag("TriggerTouch"))
+            {
+                Debug.Log("Click detected on BoxCollider!");
+                ReleaseSlicer();
+                ApplyImpulse();
+                ApplyMoveForce();
+                ApplyRotationForce();
+            }
+            //
+
+
             
         //    Debug.Log("MOUSE DOWN");
         }

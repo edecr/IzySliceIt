@@ -18,6 +18,11 @@ public class GameManager : MonoBehaviour
 
 //	[SerializeField]
 	private UI_GameOver _UI_GameOver;
+	private UI_Options _UI_Options;
+
+	private int _sceneToLoad;
+
+	public bool GameIsPaused = false;
 
 	void Awake ()
 	{
@@ -54,7 +59,25 @@ public class GameManager : MonoBehaviour
 	{
 		LoadObjectsReferences();
 		_slicerController.OnDie += _slicerController_OnDie;
+		_slicerController.OnCheckPoint += _slicerController_OnCheckPoint;
 	}
+
+	private void _slicerController_OnCheckPoint ()
+	{
+		_sceneToLoad = SceneManager.GetActiveScene().buildIndex + 1;
+
+		if (_sceneToLoad < SceneManager.sceneCountInBuildSettings)
+		{
+			SceneManager.LoadScene(_sceneToLoad);
+		} else
+		{
+			Debug.Log("FIMMM");
+		}
+	}
+
+
+
+
 
 	private void _slicerController_OnDie ()
 	{
@@ -90,6 +113,18 @@ public class GameManager : MonoBehaviour
 	{
 		_slicerController = GameObject.Find("Slicer").GetComponent<SlicerController>();
 		_UI_HUD = GameObject.Find("UI_HUD").GetComponent<UI_HUD>();
-		_UI_GameOver = GameObject.FindObjectOfType<UI_GameOver>();
+		_UI_GameOver = GameObject.Find("UI_GameOver").GetComponent<UI_GameOver>();//GameObject.FindObjectOfType<UI_GameOver>();
+		_UI_Options = GameObject.Find("UI_Options").GetComponent<UI_Options>();
+	}
+
+	public void Continue ()
+	{
+		_slicerController.enabled = true;
+		_UI_Options.OnHide();
+	}
+
+	public void Exit ()
+	{
+		Application.Quit();
 	}
 }
