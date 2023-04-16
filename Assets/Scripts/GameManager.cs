@@ -98,6 +98,7 @@ public class GameManager : MonoBehaviour
 	{
 		Score += 1;
 		_UI_HUD.SetCoinAmount(Score);
+		_UI_HUD.SetPoints();
 	}
 
 	public void RestartGame ()

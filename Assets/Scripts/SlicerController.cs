@@ -41,36 +41,21 @@ public class SlicerController : MonoBehaviour
 
     private void Update ()
     {
-        Debug.Log(">>> " + _isGrounded);
+        ///TODO substituir por touch, usar novo input system se der tempo.
+        //Debug.Log(">>> " + _isGrounded);
         if (Input.GetMouseButtonDown(0) && !GameManager.Instance.GameIsPaused)
         {
             Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit) && hit.collider.CompareTag("TriggerTouch"))
             {
-                Debug.Log("Click detected on BoxCollider!");
+            //    Debug.Log("Click detected on BoxCollider!");
                 ReleaseSlicer();
                 ApplyImpulse();
                 ApplyMoveForce();
                 ApplyRotationForce();
             }
-            //
-
-
-            
-        //    Debug.Log("MOUSE DOWN");
         }
-
-            ///TODO substituir por touch, usar novo input system se der tempo.
-            /*   if (Input.GetMouseButtonDown(0))
-               {
-                   ReleaseSlicer(); //Unstuck the Slicer from ground
-
-                   // Apply forces to move and rotate the Slicer
-                   ApplyImpulse();
-                   ApplyMoveForce();
-                   ApplyRotationForce();
-               }*/
     }
 
 	private void FixedUpdate ()
@@ -85,8 +70,7 @@ public class SlicerController : MonoBehaviour
 	private void ReleaseSlicer ()
 	{
         _rbSlicer.isKinematic = false;
-     //   transform.position = new Vector3(transform.position.x, transform.position.y + 1.2f, transform.position.z);
-        Invoke("SetGroundedWithDelay", 0.3f);
+        Invoke("SetGroundedWithDelay", 0.25f);
     }
 
     private void ApplyImpulse ()

@@ -3044,12 +3044,20 @@ PrefabInstance:
       value: 162.793
       objectReference: {fileID: 0}
     - target: {fileID: 2345418172291875845, guid: d51b4d98ddb2cd045bbbdd5bc683681d, type: 3}
+      propertyPath: UpForce
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 2345418172291875845, guid: d51b4d98ddb2cd045bbbdd5bc683681d, type: 3}
       propertyPath: MoveForce
       value: 450
       objectReference: {fileID: 0}
     - target: {fileID: 2345418172291875845, guid: d51b4d98ddb2cd045bbbdd5bc683681d, type: 3}
       propertyPath: RotationForce
       value: 350
+      objectReference: {fileID: 0}
+    - target: {fileID: 2345418172291875845, guid: d51b4d98ddb2cd045bbbdd5bc683681d, type: 3}
+      propertyPath: gravityMultiplier
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2345418172291875855, guid: d51b4d98ddb2cd045bbbdd5bc683681d, type: 3}
       propertyPath: m_Name
